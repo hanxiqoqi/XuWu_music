@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XuWu 音乐 - 音乐管理</title>
+    <link rel="icon" href="../static/img/Logo1.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+    <!-- 导航栏 -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="/" class="text-xl font-bold text-blue-600">XuWu 音乐</a>
+            <form action="/search" method="get" class="flex items-center">
+                <input type="text" name="query" placeholder="搜索音乐"
+                    class="border border-gray-300 rounded-l px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                <button type="submit"
+                    class="bg-blue-600 text-white px-3 py-2 rounded-r hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
+            <div class="flex items-center space-x-4">
+                <a href="/account" class="text-gray-600 hover:text-gray-800">个人账号</a>
+                <a href="/music_management" class="text-gray-600 hover:text-gray-800">音乐管理</a>
+                <a href="/logout" class="text-gray-600 hover:text-gray-800">注销</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 音乐管理内容 -->
+    <div class="container mx-auto px-4 py-8">
+        <h2 class="text-2xl font-bold mb-4">音乐管理</h2>
+        <form method="post" enctype="multipart/form-data">
+            <div class="mb-4">
+                <label for="title" class="block text-gray-700 font-bold mb-2">歌曲标题</label>
+                <input type="text" id="title" name="title"
+                    class="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div class="mb-4">
+                <label for="artist" class="block text-gray-700 font-bold mb-2">歌手</label>
+                <input type="text" id="artist" name="artist"
+                    class="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div class="mb-4">
+                <label for="category" class="block text-gray-700 font-bold mb-2">分类</label>
+                <input type="text" id="category" name="category"
+                    class="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div class="mb-4">
+                <label for="music_file" class="block text-gray-700 font-bold mb-2">选择音乐文件</label>
+                <input type="file" id="music_file" name="music_file"
+                    class="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div class="mb-4">
+                <label for="lrc_file" class="block text-gray-700 font-bold mb-2">选择歌词文件</label>
+                <input type="file" id="lrc_file" name="lrc_file"
+                    class="border border-gray-300 rounded px-3 py-2 w-full focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <button type="submit"
+                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">上传音乐</button>
+        </form>
+
+        <h3 class="text-xl font-bold mt-8 mb-4">已上传音乐</h3>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {% for music in music_db %}
+            <div class="bg-white rounded-md shadow-md p-4">
+                <h4 class="text-lg font-bold mb-2">{{ music.title }}</h4>
+                <p class="text-gray-600 mb-2">{{ music.artist }}</p>
+                <!-- 移除歌词显示的 div -->
+                <audio id="audio-{{ music.id }}" controls>
+                    <source src="{{ url_for('static', filename='music/' + music.music_file) }}" type="audio/mpeg">
+                    你的浏览器不支持音频播放。
+                </audio>
+                <!-- 添加删除按钮 -->
+                <form method="post" action="{{ url_for('delete_music', music_id=music.id) }}" class="mt-2">
+                    <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">删除音乐</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+
+</html>
+<script>
+    // 页面加载完成后执行
+    document.addEventListener('DOMContentLoaded', function() {
+        const musicList = {{ music_db|tojson|safe }};
+        musicList.forEach(function(music) {
+            if (music.lrc_file) {
+                const lyricsDiv = document.getElementById(`lyrics-${music.id}`);
+                const xhr = new XMLHttpRequest();
+                xhr.open('GET', `static/lrc/${music.lrc_file}`, true);
+                xhr.onreadystatechange = function() {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        lyricsDiv.textContent = xhr.responseText;
+                    }
+                };
+                xhr.send();
+            }
+        });
+    });
+</script>
+<!-- 移除页面底部的歌词加载脚本 -->
+   

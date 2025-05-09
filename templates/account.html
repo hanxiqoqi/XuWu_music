@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XuWu 音乐 - 个人账号</title>
+    <link rel="icon" href="../static/img/Logo1.png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+    <!-- 导航栏 -->
+    <nav class="bg-white shadow-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="/" class="text-xl font-bold text-blue-600">XuWu 音乐</a>
+            <form action="/search" method="get" class="flex items-center">
+                <input type="text" name="query" placeholder="搜索音乐"
+                    class="border border-gray-300 rounded-l px-3 py-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                <button type="submit"
+                    class="bg-blue-600 text-white px-3 py-2 rounded-r hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </form>
+            <div class="flex items-center space-x-4">
+                <a href="/account" class="text-gray-600 hover:text-gray-800">个人账号</a>
+                <a href="/music_management" class="text-gray-600 hover:text-gray-800">音乐管理</a>
+                <a href="/logout" class="text-gray-600 hover:text-gray-800">注销</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 个人账号内容 -->
+    <div class="container mx-auto px-4 py-8">
+        <h2 class="text-2xl font-bold mb-4">个人账号</h2>
+        <!-- 添加修改密码界面 -->
+        <h3 class="text-xl font-bold mb-2">修改密码</h3>
+        <form method="post" action="/change_password">
+            <input type="password" name="old_password" placeholder="旧密码"
+                class="border border-gray-300 rounded px-3 py-2 w-full mb-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            <input type="password" name="new_password" placeholder="新密码"
+                class="border border-gray-300 rounded px-3 py-2 w-full mb-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            <input type="password" name="confirm_password" placeholder="确认新密码"
+                class="border border-gray-300 rounded px-3 py-2 w-full mb-2 focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+            <button type="submit"
+                class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">修改密码</button>
+        </form>
+    </div>
+</body>
+
+</html>
+    
